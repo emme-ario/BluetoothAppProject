@@ -28,6 +28,11 @@ DHT DHTSensor(DHTPin, DHTType);
 //Initialize DS3231 module
 RTC_DS3231 rtc;
 
+//Define RGB led pins
+#define redPin 6
+#define greenPin 7
+#define bluePin 8
+
 //Define two lcd lines
 String line1 = "Please, type a message...";
 String line2 = "I'll wait!";
@@ -45,6 +50,11 @@ void setup() {
   Serial.begin(9600);
   lcd.begin(16, 2);
   lcd.clear();
+
+  pinMode(redPin, OUTPUT);
+  pinMode(greenPin, OUTPUT);
+  pinMode(bluePin, OUTPUT);
+  
   DHTSensor.begin();
   //Check if RTC module has started
   if(!rtc.begin()) {
@@ -58,7 +68,8 @@ void setup() {
 }
 
 void loop() {
-  
+  RGBColor(255, 0, 255);
+
   if(BTSerial.available() > 0) {
     incomingValue = BTSerial.read();
     BTSerial.print(incomingValue);
@@ -148,6 +159,12 @@ void loop() {
 
 }
 
+void RGBColor(int redValue, int greenValue, int blueValue) {
+  analogWrite(redPin, redValue);
+  analogWrite(greenPin, greenValue);
+  analogWrite(bluePin, blueValue);
+}
+
 char *res = malloc(5); //Alloca memoria nell'arduino (*res = puntatore)
 //Formatta i numeri a una cifra aggiungendo uno 0 a sinistra (0 -> 00 ... 9 -> 09)
 String pad(int n) {
@@ -156,13 +173,6 @@ String pad(int n) {
 }
 
 /*
- * IDEAS
- * 
- * DA APP MANDARE SEGNALE COSTANTE CHE PERMETTE DI USCIRE DAL WHILE POICHE CAMBIA AL TOCCO DI ALTRO
- * 1,2,3 CONDIZIONI DI INGRESSO WHILE
- * 0 (COSTANTE) CONDIZIONE DI PERMANENZA NEL WHILE
- * 
- * 
- * STATE MACHINE (?)
- * 
+    if(BTSerial.available() > 0)
+      incomingValue = BTSerial.read();
 */
