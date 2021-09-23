@@ -58,6 +58,7 @@ void setup() {
   pinMode(redPin, OUTPUT);
   pinMode(greenPin, OUTPUT);
   pinMode(bluePin, OUTPUT);
+  RGBColor(110, 255, 0);
   
   DHTSensor.begin();
   //Check if RTC module has started
@@ -72,9 +73,10 @@ void setup() {
 }
 
 void loop() {
-  RGBColor(255, 0, 255);
-
+  ledBlink();
+  
   if(BTSerial.available() > 0) {
+    RGBColor(110, 255, 0);
     incomingValue = BTSerial.read();
     BTSerial.print(incomingValue);
     Serial.println(incomingValue);
@@ -169,6 +171,13 @@ void RGBColor(int redValue, int greenValue, int blueValue) {
   analogWrite(bluePin, blueValue);
 }
 
+void ledBlink() {
+  RGBColor(110, 255, 0);
+  delay(300);
+  RGBColor(0, 0, 0);
+  delay(300);
+}
+
 char *res = malloc(5); //Alloca memoria nell'arduino (*res = puntatore)
 //Formatta i numeri a una cifra aggiungendo uno 0 a sinistra (0 -> 00 ... 9 -> 09)
 String pad(int n) {
@@ -177,6 +186,6 @@ String pad(int n) {
 }
 
 /*
-    if(BTSerial.available() > 0)
-      incomingValue = BTSerial.read();
+    !!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!
+    Maybe remove RGB
 */
