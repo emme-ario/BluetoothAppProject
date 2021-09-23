@@ -50,7 +50,11 @@ void setup() {
   Serial.begin(9600);
   lcd.begin(16, 2);
   lcd.clear();
-
+  lcd.setCursor(0, 0);
+  lcd.print("Please, connect");
+  lcd.setCursor(0, 1);
+  lcd.print("your device...");
+    
   pinMode(redPin, OUTPUT);
   pinMode(greenPin, OUTPUT);
   pinMode(bluePin, OUTPUT);
@@ -94,6 +98,9 @@ void loop() {
       lcd.print(pad(now.minute()));
       lcd.print(":");
       lcd.print(pad(now.second()));
+
+      if(BTSerial.available() > 0)
+        incomingValue = BTSerial.read();
     }
 
     //SEND MESSAGE
@@ -124,6 +131,9 @@ void loop() {
         stringStart++;
         stringEnd++;
       }
+
+      if(BTSerial.available() > 0)
+        incomingValue = BTSerial.read();
     }
 
     //TEMPERATURE and HUMIDITY
@@ -147,16 +157,10 @@ void loop() {
       lcd.print(h);
       lcd.print(" %");
 
+      if(BTSerial.available() > 0)
+        incomingValue = BTSerial.read();
     }
   }
-
-  else {
-    lcd.setCursor(0, 0);
-    lcd.print("Please, connect");
-    lcd.setCursor(0, 1);
-    lcd.print("your device...");
-  }
-
 }
 
 void RGBColor(int redValue, int greenValue, int blueValue) {
