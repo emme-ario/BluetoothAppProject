@@ -54,12 +54,12 @@ void setup() {
   lcd.print("Please, connect");
   lcd.setCursor(0, 1);
   lcd.print("your device...");
-    
+  /*  
   pinMode(redPin, OUTPUT);
   pinMode(greenPin, OUTPUT);
   pinMode(bluePin, OUTPUT);
   RGBColor(110, 255, 0);
-  
+  */
   DHTSensor.begin();
   //Check if RTC module has started
   if(!rtc.begin()) {
@@ -73,10 +73,10 @@ void setup() {
 }
 
 void loop() {
-  ledBlink();
+  //ledBlink();
   
   if(BTSerial.available() > 0) {
-    RGBColor(110, 255, 0);
+    //RGBColor(110, 255, 0);
     incomingValue = BTSerial.read();
     BTSerial.print(incomingValue);
     Serial.println(incomingValue);
@@ -165,6 +165,8 @@ void loop() {
   }
 }
 
+/*
+ * REMOVED BECAUSE LED DOESN'T WORK AT ALL
 void RGBColor(int redValue, int greenValue, int blueValue) {
   analogWrite(redPin, redValue);
   analogWrite(greenPin, greenValue);
@@ -177,10 +179,11 @@ void ledBlink() {
   RGBColor(0, 0, 0);
   delay(300);
 }
+*/
 
 char *res = malloc(5); //Alloca memoria nell'arduino (*res = puntatore)
-//Formatta i numeri a una cifra aggiungendo uno 0 a sinistra (0 -> 00 ... 9 -> 09)
-String pad(int n) {
+  //Formatta i numeri a una cifra aggiungendo uno 0 a sinistra (0 -> 00 ... 9 -> 09)
+  String pad(int n) {
   sprintf(res, "%02d", n);
   return String(res);
 }
