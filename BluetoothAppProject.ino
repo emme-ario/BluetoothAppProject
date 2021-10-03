@@ -33,9 +33,10 @@ RTC_DS3231 rtc;
 #define greenPin 7
 #define bluePin 8
 
-//Define two lcd lines
+//Define two lcd lines and one to receive message
 String line1 = "Please, type a message...";
 String line2 = "I'll wait!";
+String sentMessage;
 
 //Define vars to Hmove text on lcd
 int stringStart = 0;
@@ -101,8 +102,10 @@ void loop() {
       lcd.print(":");
       lcd.print(pad(now.second()));
 
-      if(BTSerial.available() > 0)
+      if(BTSerial.available() > 0){
+        lcd.clear();
         incomingValue = BTSerial.read();
+      }
     }
 
     //SEND MESSAGE
@@ -134,12 +137,27 @@ void loop() {
         stringEnd++;
       }
 
-      if(BTSerial.available() > 0)
+      /*  REMOVED BECAUSE HC-05 RECEIVED NaN INSTEAD OF Char
+       *
+      delay(100);
+      char c = BTSerial.read();
+      sentMessage += c;
+      
+      if(sentMessage.length() > 0) {
+        lcd.setCursor(0, 0);
+        lcd.print(sentMessage);
+        Serial.print(sentMessage);
+      }
+      */
+      
+      if(BTSerial.available() > 0){
+        lcd.clear();
         incomingValue = BTSerial.read();
+      }
     }
 
     //TEMPERATURE and HUMIDITY
-    while(incomingValue == '3') {
+    while(incomingValue == '3') {      
       //Read Humidity and Temperature to keep them updated
       float h = DHTSensor.readHumidity();
       float t = DHTSensor.readTemperature();
@@ -159,14 +177,23 @@ void loop() {
       lcd.print(h);
       lcd.print(" %");
 
-      if(BTSerial.available() > 0)
+      if(BTSerial.available() > 0){
+        lcd.clear();
         incomingValue = BTSerial.read();
+      }
     }
   }
 }
 
-/*
- * REMOVED BECAUSE LED DOESN'T WORK AT ALL
+char *res = malloc(5); //Alloca memoria nell'arduino (*res = puntatore)
+  //Formatta i numeri a una cifra aggiungendo uno 0 a sinistra (0 -> 00 ... 9 -> 09)
+  String pad(int n) {
+  sprintf(res, "%02d", n);
+  return String(res);
+}
+
+/*  REMOVED BECAUSE LED DOESN'T WORK AT ALL
+ *  
 void RGBColor(int redValue, int greenValue, int blueValue) {
   analogWrite(redPin, redValue);
   analogWrite(greenPin, greenValue);
@@ -179,16 +206,5 @@ void ledBlink() {
   RGBColor(0, 0, 0);
   delay(300);
 }
-*/
-
-char *res = malloc(5); //Alloca memoria nell'arduino (*res = puntatore)
-  //Formatta i numeri a una cifra aggiungendo uno 0 a sinistra (0 -> 00 ... 9 -> 09)
-  String pad(int n) {
-  sprintf(res, "%02d", n);
-  return String(res);
-}
-
-/*
-    !!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!
-    Maybe remove RGB
+*
 */
